@@ -2,46 +2,32 @@
 
 namespace DomaciUkolAmonVlajky
 {
-    /// <summary>
-    /// Výčet dostupných vlajek.
-    /// </summary>
-    enum Vlajky { CZ = 1, DE, US, FR, JP }
+    enum Vlajky { CZ = 1, DE, US, FR, JP, IT, ES }
 
-    /// <summary>
-    /// Rozhraní pro vlajku.
-    /// </summary>
     interface IVlajka
     {
         string Nazev { get; }
         void Vykresli();
     }
 
-    /// <summary>
-    /// Tovární třída pro vytváření instancí vlajek.
-    /// </summary>
     static class VlajkaFactory
     {
         public static IVlajka VytvorVlajku(Vlajky typ)
         {
             switch (typ)
             {
-                case Vlajky.CZ:
-                    return new CeskaVlajka();
-                case Vlajky.DE:
-                    return new NemeckaVlajka();
-                case Vlajky.US:
-                    return new AmerickaVlajka();
-                case Vlajky.FR:
-                    return new FrancouzskaVlajka();
-                case Vlajky.JP:
-                    return new JaponskaVlajka();
-                default:
-                    return null;
+                case Vlajky.CZ: return new CeskaVlajka();
+                case Vlajky.DE: return new NemeckaVlajka();
+                case Vlajky.US: return new AmerickaVlajka();
+                case Vlajky.FR: return new FrancouzskaVlajka();
+                case Vlajky.JP: return new JaponskaVlajka();
+                case Vlajky.IT: return new ItalskaVlajka();
+                case Vlajky.ES: return new SpanelskaVlajka();
+                default: return null;
             }
         }
     }
 
-    // Třída pro základní vlastnosti vlajky
     abstract class Vlajka : IVlajka
     {
         protected const int vyska = 20;
@@ -50,11 +36,9 @@ namespace DomaciUkolAmonVlajky
         public abstract void Vykresli();
     }
 
-    // Implementace jednotlivých vlajek:
     class CeskaVlajka : Vlajka
     {
         public override string Nazev => "Česká republika";
-
         public override void Vykresli()
         {
             for (int i = 0; i < vyska; i++)
@@ -66,37 +50,29 @@ namespace DomaciUkolAmonVlajky
                 Console.Write(new string('█', delkaModre));
                 Console.ForegroundColor = (i <= vyska / 2) ? ConsoleColor.White : ConsoleColor.Red;
                 Console.WriteLine(new string('█', delkaBile));
-                Console.ResetColor();
             }
+            Console.ResetColor();
         }
     }
 
     class NemeckaVlajka : Vlajka
     {
         public override string Nazev => "Německo";
-
         public override void Vykresli()
         {
             int pruh = vyska / 3;
             for (int i = 0; i < vyska; i++)
             {
-                if (i < pruh)
-                    Console.ForegroundColor = ConsoleColor.Black;
-                else if (i < 2 * pruh)
-                    Console.ForegroundColor = ConsoleColor.Red;
-                else
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-
+                Console.ForegroundColor = (i < pruh) ? ConsoleColor.Black : (i < 2 * pruh) ? ConsoleColor.Red : ConsoleColor.Yellow;
                 Console.WriteLine(new string('█', sirka));
-                Console.ResetColor();
             }
+            Console.ResetColor();
         }
     }
 
     class AmerickaVlajka : Vlajka
     {
         public override string Nazev => "USA";
-
         public override void Vykresli()
         {
             int pruhy = 13;
@@ -109,7 +85,6 @@ namespace DomaciUkolAmonVlajky
                 for (int j = 0; j < vyskaPruhu; j++)
                 {
                     int aktualniY = i * vyskaPruhu + j;
-
                     if (aktualniY < vyskaPole)
                     {
                         Console.ForegroundColor = ConsoleColor.Blue;
@@ -122,16 +97,15 @@ namespace DomaciUkolAmonVlajky
                         Console.ForegroundColor = (i % 2 == 0) ? ConsoleColor.Red : ConsoleColor.White;
                         Console.WriteLine(new string('█', sirka));
                     }
-                    Console.ResetColor();
                 }
             }
+            Console.ResetColor();
         }
     }
 
     class FrancouzskaVlajka : Vlajka
     {
         public override string Nazev => "Francie";
-
         public override void Vykresli()
         {
             int sirkaPruhu = sirka / 3;
@@ -143,15 +117,14 @@ namespace DomaciUkolAmonVlajky
                 Console.Write(new string('█', sirkaPruhu));
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(new string('█', sirka - 2 * sirkaPruhu));
-                Console.ResetColor();
             }
+            Console.ResetColor();
         }
     }
 
     class JaponskaVlajka : Vlajka
     {
         public override string Nazev => "Japonsko";
-
         public override void Vykresli()
         {
             int stredX = sirka / 2;
@@ -168,10 +141,44 @@ namespace DomaciUkolAmonVlajky
 
                     Console.ForegroundColor = jeVKruhu ? ConsoleColor.Red : ConsoleColor.White;
                     Console.Write('█');
-                    Console.ResetColor();
                 }
                 Console.WriteLine();
             }
+            Console.ResetColor();
+        }
+    }
+
+    class ItalskaVlajka : Vlajka
+    {
+        public override string Nazev => "Itálie";
+        public override void Vykresli()
+        {
+            int sirkaPruhu = sirka / 3;
+            for (int i = 0; i < vyska; i++)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write(new string('█', sirkaPruhu));
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(new string('█', sirkaPruhu));
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(new string('█', sirka - 2 * sirkaPruhu));
+            }
+            Console.ResetColor();
+        }
+    }
+
+    class SpanelskaVlajka : Vlajka
+    {
+        public override string Nazev => "Španělsko";
+        public override void Vykresli()
+        {
+            int pruh = vyska / 3;
+            for (int i = 0; i < vyska; i++)
+            {
+                Console.ForegroundColor = (i < pruh || i >= 2 * pruh) ? ConsoleColor.Red : ConsoleColor.Yellow;
+                Console.WriteLine(new string('█', sirka));
+            }
+            Console.ResetColor();
         }
     }
 
@@ -185,46 +192,40 @@ namespace DomaciUkolAmonVlajky
                 Console.WriteLine("╔══════════════════════╗");
                 Console.WriteLine("║      >>> VLAJKY <<<      ║");
                 Console.WriteLine("╠══════════════════════╣");
-                Console.WriteLine("║ 1 - Česká republika     ║");
-                Console.WriteLine("║ 2 - Německo             ║");
-                Console.WriteLine("║ 3 - USA                 ║");
-                Console.WriteLine("║ 4 - Francie             ║");
-                Console.WriteLine("║ 5 - Japonsko            ║");
+                foreach (Vlajky vlajka in Enum.GetValues(typeof(Vlajky)))
+                {
+                    Console.WriteLine($"║ {(int)vlajka} - {vlajka}            ║");
+                }
                 Console.WriteLine("║ 0 - Konec               ║");
                 Console.WriteLine("╚══════════════════════╝");
 
                 Console.Write("Vyberte číslo vlajky: ");
-                if (!int.TryParse(Console.ReadLine(), out int volba) || volba < 0 || volba > 5)
+                if (!int.TryParse(Console.ReadLine(), out int volba) || !Enum.IsDefined(typeof(Vlajky), volba) && volba != 0)
                 {
                     Console.WriteLine("Neplatná volba. Zkuste to znovu.");
                     Console.ReadKey();
                     continue;
                 }
 
-                if (volba == 0)
-                {
-                    break;
-                }
+                if (volba == 0) break;
 
-                IVlajka vlajka = VlajkaFactory.VytvorVlajku((Vlajky)volba);
-
-                if (vlajka != null)
+                IVlajka vlajkaInstance = VlajkaFactory.VytvorVlajku((Vlajky)volba);
+                if (vlajkaInstance == null)
                 {
-                    Console.Clear();
-                    Console.WriteLine($"--- {vlajka.Nazev} ---\n");
-                    vlajka.Vykresli();
+                    Console.WriteLine("Nepodařilo se vytvořit vlajku.");
                 }
                 else
                 {
-                    Console.WriteLine("Chyba při vytváření vlajky.");
+                    Console.Clear();
+                    Console.WriteLine($"--- {vlajkaInstance.Nazev} ---\n");
+                    vlajkaInstance.Vykresli();
                 }
 
                 Console.WriteLine("\nStiskněte libovolnou klávesu pro návrat do menu...");
                 Console.ReadKey();
             }
 
-            Console.WriteLine("Program ukončen. Stiskněte libovolnou klávesu pro zavření.");
-            Console.ReadKey();
+            Console.WriteLine("Program ukončen.");
         }
     }
 }
